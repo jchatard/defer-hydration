@@ -1,34 +1,22 @@
-import {For, ParentProps} from "solid-js";
+import { For, ParentProps } from "solid-js";
 
 type PageContentProps = {
-    menuMain: any[];
-    menuFooter: any[];
+  menu: any[];
+  footer: any[];
 };
 
 export default function PageContent(props: ParentProps<PageContentProps>) {
+  return (
+    <>
+      <h1>Menu</h1>
+      <ul>
+        <For each={props.menu}>{(item) => <li>{item.title}</li>}</For>
+      </ul>
 
-    const some_menu_items = props.menuMain.slice(0, 5);
+      {props.children}
 
-    const some_menu_items_footer = props.menuFooter.slice(0, 5);
-    return (<>
-
-        <h1>Main menu</h1>
-        <ul>
-            <For each={some_menu_items}>
-                {(item) => (
-
-                    <li>{item.title}</li>
-                )}
-            </For>
-        </ul>
-
-        {props.children}
-        <h1>Footer menu</h1>
-        <For each={some_menu_items_footer}>
-            {(item) => (
-
-            <li>{item.title}</li>
-            )}
-        </For>
-    </>)
+      <h1>Footer</h1>
+      <For each={props.footer}>{(item) => <li>{item.title}</li>}</For>
+    </>
+  );
 }

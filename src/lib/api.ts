@@ -1,51 +1,36 @@
-export async function fetchMenuMain() {
-    const headers: Record<string, string> = { "User-Agent": "chrome" };
+type What = "menu" | "footer" | "posts" | "comments";
 
-    try {
-        let response = await fetch("https://jsonplaceholder.typicode.com/posts", {headers});
-        let text = await response.text();
-        return JSON.parse(text);
-    }
-    catch (error) {
-        return {error};
-    }
-}
+export async function fetchStuffWithDelay(what: What, delay: number = 1000) {
+  console.log(`${what} in`);
+  await new Promise((r) => {
+    setTimeout(() => r(0), delay);
+  });
+  console.log(`${what} done`);
 
-export async function fetchMenuFooter() {
-    const headers: Record<string, string> = { "User-Agent": "chrome" };
-
-    try {
-        let response = await fetch("https://jsonplaceholder.typicode.com/photos", {headers});
-        let text = await response.text();
-        return JSON.parse(text);
-    }
-    catch (error) {
-        return {error};
-    }
-}
-
-export async function fetchComments() {
-    const headers: Record<string, string> = { "User-Agent": "chrome" };
-
-    try {
-        let response = await fetch("https://jsonplaceholder.typicode.com/albums", {headers});
-        let text = await response.text();
-        return JSON.parse(text);
-    }
-    catch (error) {
-        return {error};
-    }
-}
-
-export async function fetchPhotos() {
-    const headers: Record<string, string> = { "User-Agent": "chrome" };
-
-    try {
-        let response = await fetch("https://jsonplaceholder.typicode.com/photos", {headers});
-        let text = await response.text();
-        return JSON.parse(text);
-    }
-    catch (error) {
-        return {error};
-    }
+  switch (what) {
+    case "menu":
+      return [
+        { id: 1, title: "Home", url: "/" },
+        { id: 2, title: "About", url: "/about" },
+        { id: 3, title: "Contact", url: "/contact" },
+      ];
+    case "footer":
+      return [
+        { id: 1, title: "Home", url: "/" },
+        { id: 2, title: "About", url: "/about" },
+        { id: 3, title: "Contact", url: "/contact" },
+      ];
+    case "posts":
+      return [1, 2, 3, 4, 5, 6, 7, 8, 9].map((index) => {
+        return { id: index, title: `My post #${index}`, url: `/post-${index}` };
+      });
+    case "comments":
+      return [1, 2, 3, 4, 5, 6, 7, 8, 9].map((index) => {
+        return {
+          id: index,
+          title: `My comment #${index}`,
+          url: `/comment-${index}`,
+        };
+      });
+  }
 }

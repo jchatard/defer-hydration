@@ -1,34 +1,59 @@
 import { Title } from "@solidjs/meta";
-import Counter from "~/components/Counter";
-import {fetchComments, fetchPhotos} from "~/lib/api";
-import {createAsync, RouteDefinition} from "@solidjs/router";
-import {For, Show} from "solid-js";
-
-export const route = {
-    load() {
-        void fetchComments();
-    },
-} satisfies RouteDefinition;
+import Counter, { MiniCounter } from "~/components/Counter";
+import { createAsync } from "@solidjs/router";
+import { For, Show, Suspense } from "solid-js";
+import { fetchStuffWithDelay } from "~/lib/api";
 
 export default function Home() {
-    const comments = createAsync(() => fetchComments(), {
-        name: "comments",
-        deferStream: true, // FIXME: breaks hydration on page load
-    });
+  const posts = createAsync(() => fetchStuffWithDelay("posts", 400), {
+    name: "posts",
+    deferStream: true,
+  });
+
+  const comments = createAsync(() => fetchStuffWithDelay("comments", 500), {
+    name: "comments",
+    deferStream: true,
+  });
 
   return (
     <main>
       <Title>Hello World</Title>
       <h1>Hello world!</h1>
-      <Show when={comments()}>
+      <Suspense>
+        <Show when={posts() && comments()}>
           <Counter />
-          <For each={comments()}>
-              {(comment) => (
-              <li>Comment: {comment.title}</li>
-              )}
-          </For>
 
-      </Show>
+          <h2>Posts</h2>
+          <ul>
+            <For each={posts()}>
+              {(post) => (
+                <li>
+                  <a href={post.url} id={`post-${post.id}`}>
+                    {post.title}
+                  </a>
+                  &nbsp;
+                  <MiniCounter label={`Post ${post.id}`} />
+                </li>
+              )}
+            </For>
+          </ul>
+
+          <h2>Comments</h2>
+          <ul>
+            <For each={comments()}>
+              {(comment) => (
+                <li>
+                  <a href={comment.url} id={`post-${comment.id}`}>
+                    {comment.title}
+                  </a>
+                  &nbsp;
+                  <MiniCounter label={`Comment ${comment.id}`} />
+                </li>
+              )}
+            </For>
+          </ul>
+        </Show>
+      </Suspense>
       <p>
         Visit{" "}
         <a href="https://start.solidjs.com" target="_blank">
