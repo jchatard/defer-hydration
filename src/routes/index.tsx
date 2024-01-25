@@ -15,6 +15,11 @@ export default function Home() {
     deferStream: true,
   });
 
+  const photos = createAsync(() => fetchStuffWithDelay("photos", 100), {
+    name: "photos",
+    deferStream: true,
+  });
+
   return (
     <main>
       <Title>Hello World</Title>
@@ -48,6 +53,21 @@ export default function Home() {
                   </a>
                   &nbsp;
                   <MiniCounter label={`Comment ${comment.id}`} />
+                </li>
+              )}
+            </For>
+          </ul>
+
+          <h2>Photos</h2>
+          <ul>
+            <For each={photos()}>
+              {(photo) => (
+                <li>
+                  <a href={photo.url} id={`photo-${photo.id}`}>
+                    {photo.title}
+                  </a>
+                  &nbsp;
+                  <MiniCounter label={`Photo ${photo.id}`} />
                 </li>
               )}
             </For>

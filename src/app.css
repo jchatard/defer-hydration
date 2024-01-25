@@ -37,3 +37,7 @@ p {
     max-width: none;
   }
 }
+
+ul {
+  text-align: left;
+}
