@@ -3,6 +3,7 @@ import Counter, { MiniCounter } from "~/components/Counter";
 import { createAsync } from "@solidjs/router";
 import { For, Show, Suspense } from "solid-js";
 import { fetchStuffWithDelay } from "~/lib/api";
+import { Photos } from "~/components/Photos";
 
 export default function Home() {
   const posts = createAsync(() => fetchStuffWithDelay("posts", 400), {
@@ -12,11 +13,6 @@ export default function Home() {
 
   const comments = createAsync(() => fetchStuffWithDelay("comments", 500), {
     name: "comments",
-    deferStream: true,
-  });
-
-  const photos = createAsync(() => fetchStuffWithDelay("photos", 100), {
-    name: "photos",
     deferStream: true,
   });
 
@@ -58,20 +54,9 @@ export default function Home() {
             </For>
           </ul>
 
-          <h2>Photos</h2>
-          <ul>
-            <For each={photos()}>
-              {(photo) => (
-                <li>
-                  <a href={photo.url} id={`photo-${photo.id}`}>
-                    {photo.title}
-                  </a>
-                  &nbsp;
-                  <MiniCounter label={`Photo ${photo.id}`} />
-                </li>
-              )}
-            </For>
-          </ul>
+          <Suspense>
+            <Photos />
+          </Suspense>
         </Show>
       </Suspense>
       <p>
