@@ -4,7 +4,7 @@ import { Router } from "@solidjs/router";
 import { FileRoutes } from "@solidjs/start";
 import { Suspense } from "solid-js";
 import "./app.css";
-import RootContexts from "~/ContextsWrapper";
+import RootContexts from "~/RootContexts";
 
 export default function App() {
   return (
